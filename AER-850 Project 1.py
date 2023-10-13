@@ -48,5 +48,16 @@ sns.heatmap(corr_matrix)
 #Classification Model Development/Engineering
 
 
+# im going to check the data to see any data bias per step
+
+
+strat = df.groupby('Step')
+
+for step, group in strat:
+    print(f"Step {step}:")
+    num_data_points = len(group)
+    print(f"Number of data points: {num_data_points}")
+
+    
 
 
