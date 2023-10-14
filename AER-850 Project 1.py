@@ -48,7 +48,7 @@ sns.heatmap(corr_matrix)
 #Classification Model Development/Engineering
 
 
-    # im going to check the data to see any data bias per step
+    # im going to check the data to see any data bias per step CODE THIS OUT LATER
 
 
 strat = df.groupby('Step')
@@ -104,7 +104,7 @@ param_grid ={
     
     }
 
-# might change the scoring ??
+#### might change the scoring ??
 
 
 grid_search = GridSearchCV(rf_model, param_grid, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
@@ -164,3 +164,25 @@ best_params = grid_search.best_params_
 best_linreg_model = grid_search.best_estimator_
 
 print("Best Hyperparameters linear regression:", best_params)
+
+## need to fit the curve with the best parameters dont forget this !
+
+# Model performance analysis 
+
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import precision_score
+from sklearn.metrics import f1_score
+
+
+#rfm model
+
+accuracy_rf = accuracy_score(test_y, rf_model_predictions)
+precision_rf = precision_score(test_y, rf_model_predictions, average='weighted')
+f1_rf = f1_score(test_y, rf_model_predictions, average='weighted')
+
+print("accuracy:", accuracy_rf )
+
+
+from sklearn.metrics import confusion_matrix
+
+
