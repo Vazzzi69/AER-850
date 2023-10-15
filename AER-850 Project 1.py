@@ -25,17 +25,27 @@ step = df['Step']
  
 
     # Scatter plot 
-    
+
+
 fig1= plt.figure()
 
+unique_steps = step.unique()
+colors = plt.cm.jet(np.linspace(0, 1, len(unique_steps)))
+
 ax1= fig1.add_subplot(111, projection='3d')
-ax1.scatter(xc, yc, zc)
+
+for i, step_value in enumerate(unique_steps):
+    step_mask = (step == step_value)
+    ax1.scatter(xc[step_mask], yc[step_mask], zc[step_mask], c=[colors[i]], label=f'Step {step_value}')
+
 ax1.set_xlabel('X')
 ax1.set_ylabel('Y')    
 ax1.set_zlabel('Z')
+ax1.legend(loc=2,fontsize='small', frameon=False,bbox_to_anchor=(1, 0.5))
 ax1.set_title('Coordinates visualization Plot for Maintenance Steps')
 
 plt.show()
+
 
 #2.3 correlation analysis 
 
