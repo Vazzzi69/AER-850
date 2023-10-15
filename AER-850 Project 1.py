@@ -48,7 +48,7 @@ sns.heatmap(corr_matrix)
 #2.4 Classification Model Development/Engineering
 
 
-#     # im going to check the data to see any data bias per step CODE THIS OUT LATER
+# im going to check the data to see any data bias per step CODE THIS OUT LATER
 
 
 # strat = df.groupby('Step')
@@ -78,7 +78,6 @@ for train_index, test_index in split.split(X, y):
     
 # random forest
 
-
 from sklearn.ensemble import RandomForestClassifier
 
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -96,9 +95,6 @@ param_grid ={
     'min_samples_split': [2, 5, 10] 
     
     }
-
-#### might change the scoring ??
-
 
 grid_search = GridSearchCV(rf_model, param_grid, cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
 grid_search.fit(train_X, train_y)
@@ -205,6 +201,17 @@ print("\nf1_rf:", f1_lm )
 from sklearn.metrics import  confusion_matrix
 
 conf_matrix = confusion_matrix(test_y, rf_model_predictions)
+
+step_labels = ['1', '2', '3','4','5','6','7', '8', '9','10','11','12','13'] 
+
+# Create a heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=step_labels, yticklabels=step_labels)
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix for Rainforest Classifier Model')
+plt.show()
+
 
 
 # 2.6 Train the model with Rainforest classifier 
