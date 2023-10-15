@@ -2,7 +2,7 @@
 # Vasi Sivakumar
 #501024572
 
-# Data Processing 
+#2.1 Data Processing 
 
 import pandas as pd
 
@@ -11,7 +11,7 @@ dfinfo = df.info()
 
 print(dfinfo)  # check to see if data is indeed in 
 
-# Data Visualization
+# 2.2 Data Visualization
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,7 +37,7 @@ ax1.set_title('Coordinates visualization Plot for Maintenance Steps')
 
 plt.show()
 
-# correlation analysis 
+#2.3 correlation analysis 
 
 import seaborn as sns 
 
@@ -45,18 +45,18 @@ crmtrx =  df.drop(columns = "Step")
 corr_matrix = crmtrx.corr()
 sns.heatmap(corr_matrix)
 
-#Classification Model Development/Engineering
+#2.4 Classification Model Development/Engineering
 
 
-    # im going to check the data to see any data bias per step CODE THIS OUT LATER
+#     # im going to check the data to see any data bias per step CODE THIS OUT LATER
 
 
-strat = df.groupby('Step')
+# strat = df.groupby('Step')
 
-for step, group in strat:
-    print(f"Step {step}:")
-    num_data_points = len(group)
-    print(f"Number of data points: {num_data_points}")
+# for step, group in strat:
+#     print(f"Step {step}:")
+#     num_data_points = len(group)
+#     print(f"Number of data points: {num_data_points}")
     
     # steps 7,8,9 have way more points... 148,221,251 rest have 24
     
@@ -75,22 +75,15 @@ for train_index, test_index in split.split(X, y):
     train_X, test_X = X.iloc[train_index], X.iloc[test_index]
     train_y, test_y= y.iloc[train_index], y.iloc[test_index]
 
-
-    #models i should use? 
     
 # random forest
 
 
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error
+from sklearn.ensemble import RandomForestClassifier
 
-rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(train_X, train_y)
-rf_model_predictions = rf_model.predict(train_X)
-rf_model_mae = mean_absolute_error(rf_model_predictions, train_y)
-
-
-print("Random Forest training MAE is: ", round(rf_model_mae,2))
+rf_model_predictions = rf_model.predict(test_X)
 
 # grid search cross validation
 
@@ -112,17 +105,15 @@ grid_search.fit(train_X, train_y)
 best_params = grid_search.best_params_
 best_rf_model = grid_search.best_estimator_
  
-print("Best Hyperparameters RF:", best_params)
+print("\nBest Hyperparameters RF:", best_params)
  
-
 # support vector machines 
 
 from sklearn.svm import SVC
 
 svm_model = SVC(C=1.0, kernel='rbf', gamma='scale')
 svm_model.fit(train_X, train_y)
-svm_model_predictions = svm_model.predict(train_X)
-svm_model_mae = mean_absolute_error(svm_model_predictions, train_y)
+svm_model_predictions = svm_model.predict(test_X)
 
 
 param_grid ={
@@ -140,7 +131,7 @@ grid_search.fit(train_X, train_y)
 best_params = grid_search.best_params_
 best_svm_model = grid_search.best_estimator_
  
-print("Best Hyperparameters SVM:", best_params)
+print("\nBest Hyperparameters SVM:", best_params)
  
 #linear regressin
     
@@ -149,8 +140,7 @@ from sklearn.linear_model import LinearRegression
 
 linreg_model = LinearRegression()
 linreg_model.fit(train_X, train_y)
-linreg_model_predictions = svm_model.predict(train_X)
-linreg_model_mae = mean_absolute_error(svm_model_predictions, train_y)
+linreg_model_predictions = svm_model.predict(test_X)
    
  # grid search cross validation
 
@@ -163,26 +153,79 @@ grid_search.fit(train_X, train_y)
 best_params = grid_search.best_params_
 best_linreg_model = grid_search.best_estimator_
 
-print("Best Hyperparameters linear regression:", best_params)
+print("\nBest Hyperparameters linear regression:", best_params)
 
-## need to fit the curve with the best parameters dont forget this !
 
-# Model performance analysis 
+#2.5 Model performance analysis
 
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import f1_score
 
 
-#rfm model
-
+    #RFC model
 accuracy_rf = accuracy_score(test_y, rf_model_predictions)
-precision_rf = precision_score(test_y, rf_model_predictions, average='weighted')
+precision_rf = precision_score(test_y, rf_model_predictions, average='weighted',zero_division=0)
 f1_rf = f1_score(test_y, rf_model_predictions, average='weighted')
 
-print("accuracy:", accuracy_rf )
+print("\n\n Rain Forest Classifier MODEL INFO:")
+print("\naccuracy:", accuracy_rf )
+print("\nprecision_rf:", precision_rf )
+print("\nf1_rf:", f1_rf )
+
+    #SVM model
+
+accuracy_svm = accuracy_score(test_y, svm_model_predictions)
+precision_svm = precision_score(test_y, svm_model_predictions, average='weighted',zero_division=0)
+f1_svm = f1_score(test_y, svm_model_predictions, average='weighted')
+print("\n\n Support Vector Machines MODEL INFO:")
+print("\naccuracy:", accuracy_svm )
+print("\nprecision_rf:", precision_svm )
+print("\nf1_rf:", f1_svm )
 
 
-from sklearn.metrics import confusion_matrix
+    #LR model
+
+accuracy_lm = accuracy_score(test_y, linreg_model_predictions)
+precision_lm = precision_score(test_y, linreg_model_predictions, average='weighted',zero_division=0)
+f1_lm = f1_score(test_y, linreg_model_predictions, average='weighted')
+print("\n\n Linear Regression MODEL INFO:")
+print("\naccuracy:", accuracy_lm)
+print("\nprecision_rf:", precision_lm )
+print("\nf1_rf:", f1_lm )
+
+# Based of the scores from accuracy, presicion and F1, Random forest has 
+# the highest score across the board. Score is ranged from 0 to 1, where 0 means
+# least while 1 means most in terms of all categories. 
+
+
+
+    # Confusion matrix
+
+from sklearn.metrics import  confusion_matrix
+
+conf_matrix = confusion_matrix(test_y, rf_model_predictions)
+
+
+# 2.6 Train the model with Rainforest classifier 
+
+
+import joblib
+
+joblib.dump(best_rf_model, 'final_maintenace_model.joblib')
+final_model = joblib.load('final_maintenace_model.joblib')
+
+test_coordinates = [
+    [9.375, 3.0625, 1.51],
+    [6.995, 5.125, 0.3875],
+    [0, 3.0625, 1.93],
+    [9.4, 3, 1.8],
+    [9.4, 3, 1.3]
+]
+
+predicted_steps = final_model.predict(test_coordinates)
+
+print ("\n The predicted maintenace steps for given coordinates are:\n", predicted_steps)
+
 
 
