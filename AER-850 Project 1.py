@@ -46,6 +46,27 @@ ax1.set_title('Coordinates visualization Plot for Maintenance Steps')
 
 plt.show()
 
+#plt each induvidual one against step 
+
+
+plt.plot(xc,step)
+plt.xlabel('X')
+plt.ylabel('Step')
+plt.title('X vs Step')
+plt.show()
+
+plt.plot(yc,step)
+plt.xlabel('Y')
+plt.ylabel('Step')
+plt.title('Y vs Step')
+plt.show()
+
+plt.plot(zc,step)
+plt.xlabel('Z')
+plt.ylabel('Step')
+plt.title('Z vs Step')
+plt.show()
+
 
 #2.3 correlation analysis 
 
